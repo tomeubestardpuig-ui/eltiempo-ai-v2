@@ -65,12 +65,7 @@
         input[type="text"] {
             flex-grow: 1; padding: 12px; border-radius: 8px; border: none; font-size: 1.15em; background: transparent; color: #333; outline: none; margin-bottom: 0;
         }
-        #voiceInputBtn {
-            background: transparent; border: none; padding: 12px; color: #333; font-size: 1.2em; cursor: pointer; transition: color 0.3s ease; outline: none;
-        }
-        #voiceInputBtn:hover { color: var(--button-bg); }
-        #voiceInputBtn.listening { color: red; }
-
+        
         button#submitBtn {
             padding: 12px 25px; border: none; border-radius: 8px; background-color: var(--button-bg); color: white; font-size: 1.2em; font-weight: 600; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); margin-bottom: 20px;
         }
@@ -110,7 +105,6 @@
             background: rgba(255, 255, 255, 0.2);
         }
         .forecast-day .day-name { font-weight: 600; font-size: 1em; }
-        /* --- NUEVO ESTILO PARA EL ICONO DEL TIEMPO --- */
         .forecast-day .weather-icon {
             font-size: 2em;
             color: var(--accent-color);
@@ -189,41 +183,22 @@
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) modal.classList.remove('active');
             });
-            
-            // Lógica de Speech Recognition
-            if ('SpeechRecognition' in window || 'webkitSpeechRecognition' in window) {
-                const voiceInputBtn = document.getElementById('voiceInputBtn');
-                const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-                const recognition = new SpeechRecognition();
-                recognition.lang = 'es-ES';
-                voiceInputBtn.style.display = 'inline-block';
-                recognition.onresult = (event) => {
-                    cityInput.value = event.results[0][0].transcript;
-                    getWeather();
-                };
-                voiceInputBtn.addEventListener('click', () => {
-                    recognition.start();
-                    cityInput.placeholder = 'Escuchando...';
-                });
-            }
         });
 
-        function readNarrative() { /* ... (código sin cambios) ... */ }
-
-        // --- NUEVA FUNCIÓN PARA MAPEAR ICONOS ---
+        function readNarrative() { /* Código sin cambios */ }
         function mapWeatherIcon(iconCode) {
             const iconMap = {
                 '01d': 'fas fa-sun', '01n': 'fas fa-moon',
                 '02d': 'fas fa-cloud-sun', '02n': 'fas fa-cloud-moon',
                 '03d': 'fas fa-cloud', '03n': 'fas fa-cloud',
-                '04d': 'fas fa-cloud-meatball', '04n': 'fas fa-cloud-meatball', // Nubes más densas
+                '04d': 'fas fa-cloud-meatball', '04n': 'fas fa-cloud-meatball',
                 '09d': 'fas fa-cloud-showers-heavy', '09n': 'fas fa-cloud-showers-heavy',
                 '10d': 'fas fa-cloud-sun-rain', '10n': 'fas fa-cloud-moon-rain',
                 '11d': 'fas fa-bolt', '11n': 'fas fa-bolt',
                 '13d': 'fas fa-snowflake', '13n': 'fas fa-snowflake',
                 '50d': 'fas fa-smog', '50n': 'fas fa-smog'
             };
-            return iconMap[iconCode] || 'fas fa-question-circle'; // Un icono por defecto si no se encuentra
+            return iconMap[iconCode] || 'fas fa-question-circle';
         }
 
         async function getDailyNarrative(dayData) {
@@ -304,8 +279,6 @@
                             data.forecast.forEach(day => {
                                 const dayElement = document.createElement('div');
                                 dayElement.className = 'forecast-day';
-
-                                // --- MODIFICADO: Usamos la función para obtener el icono ---
                                 const iconClass = mapWeatherIcon(day.icon);
                                 
                                 dayElement.innerHTML = `
@@ -340,7 +313,6 @@
         
         <div class="input-group">
             <input type="text" id="cityInput" placeholder="Escribe tu ciudad (ej: Barcelona)">
-            <button id="voiceInputBtn" title="Hablar para buscar" style="display: none;"><i class="fas fa-microphone"></i></button>
         </div>
 
         <div class="select-group">
