@@ -1,0 +1,6 @@
+Flask
+google-generativeai
+requests
+python-dotenv
+gunicorn
+protobuf==4.25.3
